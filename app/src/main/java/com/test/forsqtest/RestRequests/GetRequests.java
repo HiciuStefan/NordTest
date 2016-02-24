@@ -1,6 +1,6 @@
 package com.test.forsqtest.RestRequests;
 
-import com.test.forsqtest.Models.RetrofitModelSearch;
+import com.test.forsqtest.Models.ModelSearchRetrofit;
 
 import java.util.Map;
 
@@ -13,5 +13,5 @@ import retrofit2.http.QueryMap;
  */
 public interface GetRequests {
     @GET("venues/search")
-    public Call<RetrofitModelSearch> getData(@QueryMap  Map<String, String>fields);
+    public Call<ModelSearchRetrofit> getData(@QueryMap  Map<String, String>fields);
 }

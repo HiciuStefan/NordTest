@@ -7,16 +7,16 @@ import java.util.List;
 /**
  * Created by Hiciu on 2/23/2016.
  */
-public class RetrofitModelSearch {
+public class ModelSearchRetrofit {
     @SerializedName("response")
     public SearchResponse response;
 
     public class SearchResponse {
-        public List<RetrofitModelVenues> getVenues() {
+        public List<ModelVenuesRetrofit> getVenues() {
             return venues;
         }
 
         @SerializedName("venues")
-        List<RetrofitModelVenues> venues;
+        List<ModelVenuesRetrofit> venues;
     }
 }

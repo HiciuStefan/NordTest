@@ -5,15 +5,15 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/search_results_name"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
     <TextView
-        android:id="@+id/address"
+        android:id="@+id/search_results_address"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
     <TextView
-        android:id="@+id/distance"
+        android:id="@+id/search_results_distance"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 

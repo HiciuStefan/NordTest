@@ -1,8 +1,8 @@
 package com.test.forsqtest.Search4Sq;
 
 import com.test.forsqtest.Constants.AppConstants;
-import com.test.forsqtest.Models.RetrofitModelSearch;
-import com.test.forsqtest.Models.RetrofitModelVenues;
+import com.test.forsqtest.Models.ModelSearchRetrofit;
+import com.test.forsqtest.Models.ModelVenuesRetrofit;
 import com.test.forsqtest.RestRequests.GetRequests;
 import com.test.forsqtest.RestRequests.RetrofitAdapter;
 
@@ -60,19 +60,21 @@ public class SearchInteractor implements ISearchInteractor {
             params.put("client_id", AppConstants.FORSQUARE_CLIENT_ID);
             params.put("client_secret", AppConstants.FORSQUARE_CLIENT_SECRET);
             params.put("v", "20140715");
-            mGetRetrofitAdapter.getData(params).enqueue(new Callback<RetrofitModelSearch>() {
+            mGetRetrofitAdapter.getData(params).enqueue(new Callback<ModelSearchRetrofit>() {
                 @Override
-                public void onResponse(Call<RetrofitModelSearch> call, Response<RetrofitModelSearch> response) {
-                    if (response.isSuccess() && response.body() != null) {
+                public void onResponse(Call<ModelSearchRetrofit> call, Response<ModelSearchRetrofit> response) {
+                    ModelSearchRetrofit result = response.body();
+                    if (response.isSuccess() && result != null && result.response != null) {
 
-                        for (RetrofitModelVenues venue :
-                                response.body().response.getVenues()) {
+                        for (ModelVenuesRetrofit venue :
+                                result.response.getVenues()) {
+
                         }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<RetrofitModelSearch> call, Throwable t) {
+                public void onFailure(Call<ModelSearchRetrofit> call, Throwable t) {
 
                 }
             });

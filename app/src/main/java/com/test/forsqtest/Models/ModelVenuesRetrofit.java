@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by Hiciu on 2/24/2016.
  */
-public class RetrofitModelVenues {
+public class ModelVenuesRetrofit {
     @SerializedName("distance")
     public String distance;
 

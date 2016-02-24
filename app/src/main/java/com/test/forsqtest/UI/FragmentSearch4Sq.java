@@ -11,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.test.forsqtest.Models.ModelResultsSearch;
 import com.test.forsqtest.R;
 import com.test.forsqtest.Search4Sq.ISearchView;
 import com.test.forsqtest.Search4Sq.SearchPresenter;
+import com.test.forsqtest.ViewAdapters.SearchListAdapter;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,7 +70,8 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
     }
 
     @Override
-    public void onReceivedNewData() {
+    public void onReceivedNewData(List<ModelResultsSearch> list) {
+        mList.setAdapter(new SearchListAdapter(getActivity(), R.layout.list_row_search4sq, list));
 
     }
 
