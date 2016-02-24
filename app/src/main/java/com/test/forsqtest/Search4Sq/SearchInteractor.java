@@ -4,6 +4,8 @@ import com.test.forsqtest.Models.ModelSearchForSq;
 import com.test.forsqtest.RestRequests.GetRequests;
 import com.test.forsqtest.RestRequests.RetrofitAdapter;
 
+import java.util.HashMap;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,7 +47,7 @@ public class SearchInteractor implements ISearchInteractor {
     public void getVenues(SearchPresenter searchPresenter) {
 
 
-        mGetRetrofitAdapter.getData().enqueue(new Callback<ModelSearchForSq>(){
+        mGetRetrofitAdapter.getData(new HashMap<String, String>()).enqueue(new Callback<ModelSearchForSq>(){
 
             @Override
             public void onResponse(Call<ModelSearchForSq> call, Response<ModelSearchForSq> response) {

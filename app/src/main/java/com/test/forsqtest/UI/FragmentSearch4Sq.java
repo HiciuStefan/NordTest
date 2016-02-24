@@ -1,6 +1,8 @@
 package com.test.forsqtest.UI;
 
 
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
     @Bind(R.id.list_search_results)
     public ListView mList;
 
+
     private SearchPresenter presenter;
     public FragmentSearch4Sq() {
         // Required empty public constructor
@@ -36,6 +39,11 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new SearchPresenter(this);
+        LocationListener locationListener = new com.test.forsqtest.Search4Sq.LocationListener(getActivity(),this);
+
+
+
+
     }
 
     @Override
@@ -54,10 +62,8 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
     }
 
     @Override
-    public String getCurrentLocation() {
+    public void onLocationUpdated(Location location) {
         presenter.onLocationUpdate("Brasil");
-        return null;
     }
-
 
 }
