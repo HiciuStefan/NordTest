@@ -1,16 +1,19 @@
 package com.test.forsqtest.Search4Sq;
 
+import com.test.forsqtest.Models.ModelResultsSearch;
+
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * Created by Hiciu on 2/23/2016.
  */
 public class SearchPresenter implements ISearchPresenter {
-    private WeakReference<ISearchView> mViewCallbacks;
+    private WeakReference<ISearchView> mViewReference;
     private SearchInteractor mInteractor;
 
     public SearchPresenter(ISearchView view) {
-        mViewCallbacks = new WeakReference<ISearchView>(view);
+        mViewReference = new WeakReference<ISearchView>(view);
         mInteractor = new SearchInteractor();
     }
 
@@ -28,8 +31,11 @@ public class SearchPresenter implements ISearchPresenter {
     }
 
     @Override
-    public void onGetDataSuccesful() {
-        /*mViewCallbacks;*/
+    public void onGetDataSuccesful(List<ModelResultsSearch> list) {
+        ISearchView view = mViewReference.get();
+        if (view != null) {
+            view.onReceivedNewData(list);
+        }
     }
 
 
