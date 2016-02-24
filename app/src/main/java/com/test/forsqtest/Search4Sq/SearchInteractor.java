@@ -1,12 +1,15 @@
 package com.test.forsqtest.Search4Sq;
 
 import com.test.forsqtest.Constants.AppConstants;
+import com.test.forsqtest.Models.ModelResultsSearch;
 import com.test.forsqtest.Models.ModelSearchRetrofit;
 import com.test.forsqtest.Models.ModelVenuesRetrofit;
 import com.test.forsqtest.RestRequests.GetRequests;
 import com.test.forsqtest.RestRequests.RetrofitAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -49,7 +52,7 @@ public class SearchInteractor implements ISearchInteractor {
     }
 
     @Override
-    public void getVenues(SearchPresenter searchPresenter) {
+    public void getVenues(final SearchPresenter searchPresenter) {
 
         if (mSetCurrentLocation && mSetCurrentText) {
 
@@ -64,13 +67,19 @@ public class SearchInteractor implements ISearchInteractor {
                 @Override
                 public void onResponse(Call<ModelSearchRetrofit> call, Response<ModelSearchRetrofit> response) {
                     ModelSearchRetrofit result = response.body();
+                    List<ModelResultsSearch>  list = new ArrayList<ModelResultsSearch>();
                     if (response.isSuccess() && result != null && result.response != null) {
 
                         for (ModelVenuesRetrofit venue :
                                 result.response.getVenues()) {
-
+                            ModelResultsSearch resultsSearch = new ModelResultsSearch();
+                            resultsSearch.address = venue.venuesLocation.getAddress();
+                            resultsSearch.distance= venue.distance;
+                            resultsSearch.name = venue.name;
+                            list.add(resultsSearch);
                         }
                     }
+                    searchPresenter.onGetDataSuccesful(list);
                 }
 
                 @Override
