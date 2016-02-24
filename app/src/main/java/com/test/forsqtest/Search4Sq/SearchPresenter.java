@@ -27,6 +27,10 @@ public class SearchPresenter implements ISearchPresenter {
         mInteractor.getVenues(this);
     }
 
+    @Override
+    public void onGetDataSuccesful() {
+        /*mViewCallbacks;*/
+    }
 
 
 }

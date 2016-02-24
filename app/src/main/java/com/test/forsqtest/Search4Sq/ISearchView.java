@@ -8,4 +8,5 @@ import android.location.Location;
 public interface ISearchView {
 
     void onLocationUpdated(Location newLocation);
+    void onReceivedNewData();
 }

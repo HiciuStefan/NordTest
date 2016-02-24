@@ -31,6 +31,7 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
 
 
     private SearchPresenter presenter;
+
     public FragmentSearch4Sq() {
         // Required empty public constructor
     }
@@ -39,9 +40,7 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new SearchPresenter(this);
-        LocationListener locationListener = new com.test.forsqtest.Search4Sq.LocationListener(getActivity(),this);
-
-
+        LocationListener locationListener = new com.test.forsqtest.Search4Sq.LocationListener(getActivity(), this);
 
 
     }
@@ -51,7 +50,7 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search4_sq, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -63,7 +62,12 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
 
     @Override
     public void onLocationUpdated(Location location) {
-        presenter.onLocationUpdate("Brasil");
+        presenter.onLocationUpdate(String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude()));
+    }
+
+    @Override
+    public void onReceivedNewData() {
+
     }
 
 }
