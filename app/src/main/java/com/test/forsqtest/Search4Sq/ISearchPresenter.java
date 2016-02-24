@@ -9,6 +9,7 @@ import java.util.List;
  */
 public interface ISearchPresenter {
 
+
     void onLocationUpdate(String location);
     void onTextUpdated(String text);
     void onGetDataSuccesful(List<ModelResultsSearch> list);

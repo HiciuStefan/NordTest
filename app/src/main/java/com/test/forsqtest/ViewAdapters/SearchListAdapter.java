@@ -20,6 +20,7 @@ public class SearchListAdapter extends ArrayAdapter<ModelResultsSearch> {
     private Context mContext;
 
     public SearchListAdapter(Context context, int resource, List<ModelResultsSearch> items) {
+
         super(context, resource, items);
         mLayout = resource;
         mContext = context;
@@ -42,11 +43,9 @@ public class SearchListAdapter extends ArrayAdapter<ModelResultsSearch> {
         }
         ModelResultsSearch item = getItem(position);
 
-        viewHolder.name.setText(item.name);
-        viewHolder.address.setText(item.address);
-        viewHolder.distance.setText(item.distance);
-
-
+        viewHolder.name.setText( "Name : "+ item.name);
+        viewHolder.address.setText("Address :" +item.address);
+        viewHolder.distance.setText("Distance :"+item.distance +" meters");
         return localconvertView;
     }
 

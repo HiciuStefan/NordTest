@@ -17,19 +17,21 @@ public class SearchPresenter implements ISearchPresenter {
         mInteractor = new SearchInteractor();
     }
 
-
+    // if we get a new location we must notify our interactor to update his location too
     @Override
     public void onLocationUpdate(String location) {
         mInteractor.updateLocation(location);
         mInteractor.getVenues(this);
     }
 
+    // if the user updates his querry the interactor must know too
     @Override
     public void onTextUpdated(String text) {
         mInteractor.updateCurrentText(text);
         mInteractor.getVenues(this);
     }
 
+    //when the interactor succesfully retrieves data , our view must show it.
     @Override
     public void onGetDataSuccesful(List<ModelResultsSearch> list) {
         ISearchView view = mViewReference.get();
@@ -37,6 +39,5 @@ public class SearchPresenter implements ISearchPresenter {
             view.onReceivedNewData(list);
         }
     }
-
 
 }

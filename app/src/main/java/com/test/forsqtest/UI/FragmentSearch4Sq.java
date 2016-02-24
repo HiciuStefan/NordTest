@@ -2,14 +2,15 @@ package com.test.forsqtest.UI;
 
 
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.test.forsqtest.Models.ModelResultsSearch;
 import com.test.forsqtest.R;
@@ -32,6 +33,8 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
     public TextView mTextInput;
     @Bind(R.id.list_search_results)
     public ListView mList;
+    @Bind(R.id.text_input_layout)
+    TextInputLayout textInputLayout;
 
 
     private SearchPresenter presenter;
@@ -44,7 +47,8 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new SearchPresenter(this);
-        LocationListener locationListener = new com.test.forsqtest.Search4Sq.LocationListener(getActivity(), this);
+        //add location listener so we know when the user moved
+        new com.test.forsqtest.Search4Sq.LocationListener(getContext(), this);
 
 
     }
@@ -55,6 +59,7 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search4_sq, container, false);
         ButterKnife.bind(this, view);
+        textInputLayout.setHint(getString(R.string.hint));
         return view;
     }
 
@@ -71,8 +76,14 @@ public class FragmentSearch4Sq extends Fragment implements ISearchView {
 
     @Override
     public void onReceivedNewData(List<ModelResultsSearch> list) {
-        mList.setAdapter(new SearchListAdapter(getActivity(), R.layout.list_row_search4sq, list));
+        if(getContext() != null) {
+            mList.setAdapter(new SearchListAdapter(getContext(), R.layout.list_row_search4sq, list));
+        }
+    }
 
+    @Override
+    public void onNoLocationAvailable() {
+        Toast.makeText(getActivity(), getResources().getText(R.string.noLocation), Toast.LENGTH_LONG).show();
     }
 
 }
