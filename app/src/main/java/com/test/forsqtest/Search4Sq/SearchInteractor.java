@@ -19,10 +19,13 @@ import retrofit2.Response;
 /**
  * Created by Hiciu on 2/23/2016.
  */
+//class that once provided with a search query and a location will be able to return the forsquare venues response as a usable list.
 public class SearchInteractor implements ISearchInteractor {
     private final GetRequests mGetRetrofitAdapter;
     private boolean mSetCurrentLocation, mSetCurrentText;
     String mCurrentLocation, mCurrentText;
+
+    public static final Integer REQUESTS_LIMIT = 3;
 
     public SearchInteractor() {
         mSetCurrentLocation = false;
@@ -30,6 +33,7 @@ public class SearchInteractor implements ISearchInteractor {
         mGetRetrofitAdapter = RetrofitAdapter.createService(GetRequests.class);
     }
 
+    //if the user moves , new location means maybe new results
     @Override
     public void updateLocation(String location) {
         if (location == null || location.isEmpty()) {
@@ -40,7 +44,7 @@ public class SearchInteractor implements ISearchInteractor {
         mSetCurrentLocation = true;
     }
 
-
+    //for when the user types a new letter
     @Override
     public void updateCurrentText(String text) {
         if (text == null || text.isEmpty()) {
@@ -51,15 +55,15 @@ public class SearchInteractor implements ISearchInteractor {
         mSetCurrentText = true;
     }
 
+
     @Override
     public void getVenues(final SearchPresenter searchPresenter) {
 
         if (mSetCurrentLocation && mSetCurrentText) {
-
             Map<String, String> params = new HashMap<>();
             params.put("ll", mCurrentLocation);
             params.put("query", mCurrentText);
-            params.put("limit", "3");
+            params.put("limit", String.valueOf(REQUESTS_LIMIT));
             params.put("client_id", AppConstants.FORSQUARE_CLIENT_ID);
             params.put("client_secret", AppConstants.FORSQUARE_CLIENT_SECRET);
             params.put("v", "20140715");
@@ -67,14 +71,17 @@ public class SearchInteractor implements ISearchInteractor {
                 @Override
                 public void onResponse(Call<ModelSearchRetrofit> call, Response<ModelSearchRetrofit> response) {
                     ModelSearchRetrofit result = response.body();
-                    List<ModelResultsSearch>  list = new ArrayList<ModelResultsSearch>();
+                    List<ModelResultsSearch> list = new ArrayList<ModelResultsSearch>();
                     if (response.isSuccess() && result != null && result.response != null) {
-
+                        //if the response is a success iterate trough all the venues and save the required data into a list
                         for (ModelVenuesRetrofit venue :
                                 result.response.getVenues()) {
                             ModelResultsSearch resultsSearch = new ModelResultsSearch();
-                            resultsSearch.address = venue.venuesLocation.getAddress();
-                            resultsSearch.distance= venue.distance;
+                            if (venue.venuesLocation != null && venue.venuesLocation.getAddress() != null) {
+                                resultsSearch.address = venue.venuesLocation.getAddress();
+                                resultsSearch.distance = String.valueOf(venue.venuesLocation.getDistance());
+                            }
+
                             resultsSearch.name = venue.name;
                             list.add(resultsSearch);
                         }

@@ -13,4 +13,5 @@ public interface ISearchView {
 
     void onLocationUpdated(Location newLocation);
     void onReceivedNewData(List<ModelResultsSearch> list);
+    void onNoLocationAvailable();
 }
