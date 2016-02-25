@@ -16,6 +16,10 @@ public class ModelSearchRetrofit {
             return venues;
         }
 
+        public void setVenues(List<ModelVenuesRetrofit> venues) {
+            this.venues = venues;
+        }
+
         @SerializedName("venues")
         List<ModelVenuesRetrofit> venues;
     }
