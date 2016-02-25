@@ -53,6 +53,7 @@ public class LocationListener implements android.location.LocationListener {
         return mView != null && mView.get() != null;
     }
 
+    //we only care about location changes if we are still connected to the correct view
     @Override
     public void onLocationChanged(final Location location) {
         if (location != null && viewOk()) {

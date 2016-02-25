@@ -1,5 +1,7 @@
 package com.test.forsqtest.Search4Sq;
 
+import android.util.Log;
+
 import com.test.forsqtest.Constants.AppConstants;
 import com.test.forsqtest.Models.ModelResultsSearch;
 import com.test.forsqtest.Models.ModelSearchRetrofit;
@@ -21,22 +23,26 @@ import retrofit2.Response;
  */
 //class that once provided with a search query and a location will be able to return the forsquare venues response as a usable list.
 public class SearchInteractor implements ISearchInteractor {
+    private static final String TAG_ERROR = "SearchInteractorError";
     private final GetRequests mGetRetrofitAdapter;
     private boolean mSetCurrentLocation, mSetCurrentText;
-    String mCurrentLocation, mCurrentText;
+    private String mCurrentLocation, mCurrentText;
 
-    public static final Integer REQUESTS_LIMIT = 3;
+    private static final Integer REQUESTS_LIMIT = 3;
 
     public SearchInteractor() {
         mSetCurrentLocation = false;
         mSetCurrentText = false;
         mGetRetrofitAdapter = RetrofitAdapter.createService(GetRequests.class);
+        mCurrentLocation = "";
+        mCurrentText = "";
     }
 
     //if the user moves , new location means maybe new results
     @Override
     public void updateLocation(String location) {
         if (location == null || location.isEmpty()) {
+            Log.d(TAG_ERROR, "updateLocation: Location was null or empty");
             mSetCurrentLocation = false;
             return;
         }
@@ -46,8 +52,9 @@ public class SearchInteractor implements ISearchInteractor {
 
     //for when the user types a new letter
     @Override
-    public void updateCurrentText(String text) {
+    public void updateCurrentQuery(String text) {
         if (text == null || text.isEmpty()) {
+            Log.d(TAG_ERROR, "updateCurrentQuery: Querry was null or empty");
             mSetCurrentText = false;
             return;
         }
@@ -58,8 +65,11 @@ public class SearchInteractor implements ISearchInteractor {
 
     @Override
     public void getVenues(final SearchPresenter searchPresenter) {
-
-        if (mSetCurrentLocation && mSetCurrentText) {
+        if (searchPresenter == null) {
+            Log.d(TAG_ERROR, "getVenues: presenter was null");
+            return;
+        }
+        if (checkSetRequirments()) {
             Map<String, String> params = new HashMap<>();
             params.put("ll", mCurrentLocation);
             params.put("query", mCurrentText);
@@ -70,23 +80,10 @@ public class SearchInteractor implements ISearchInteractor {
             mGetRetrofitAdapter.getData(params).enqueue(new Callback<ModelSearchRetrofit>() {
                 @Override
                 public void onResponse(Call<ModelSearchRetrofit> call, Response<ModelSearchRetrofit> response) {
-                    ModelSearchRetrofit result = response.body();
-                    List<ModelResultsSearch> list = new ArrayList<ModelResultsSearch>();
-                    if (response.isSuccess() && result != null && result.response != null) {
-                        //if the response is a success iterate trough all the venues and save the required data into a list
-                        for (ModelVenuesRetrofit venue :
-                                result.response.getVenues()) {
-                            ModelResultsSearch resultsSearch = new ModelResultsSearch();
-                            if (venue.venuesLocation != null && venue.venuesLocation.getAddress() != null) {
-                                resultsSearch.address = venue.venuesLocation.getAddress();
-                                resultsSearch.distance = String.valueOf(venue.venuesLocation.getDistance());
-                            }
-
-                            resultsSearch.name = venue.name;
-                            list.add(resultsSearch);
-                        }
+                    if (response != null && response.isSuccess()) {
+                        ModelSearchRetrofit result = response.body();
+                        handleVenuesResponse(result, searchPresenter);
                     }
-                    searchPresenter.onGetDataSuccesful(list);
                 }
 
                 @Override
@@ -95,6 +92,41 @@ public class SearchInteractor implements ISearchInteractor {
                 }
             });
         }
+    }
+
+    protected void handleVenuesResponse(ModelSearchRetrofit result, SearchPresenter searchPresenter) {
+        if (result == null || searchPresenter == null) {
+            Log.d(TAG_ERROR, "handleVenuesResponse: response or presenter were null");
+            return;
+        }
+        List<ModelResultsSearch> list = new ArrayList<ModelResultsSearch>();
+        if (result != null && result.response != null) {
+            //if the response is a success iterate trough all the venues and save the required data into a list
+            for (ModelVenuesRetrofit venue :
+                    result.response.getVenues()) {
+                ModelResultsSearch resultsSearch = new ModelResultsSearch();
+                if (venue.venuesLocation != null && venue.venuesLocation.getAddress() != null) {
+                    resultsSearch.address = venue.venuesLocation.getAddress();
+                    resultsSearch.distance = String.valueOf(venue.venuesLocation.getDistance());
+                }
+
+                resultsSearch.name = venue.name;
+                list.add(resultsSearch);
+            }
+        }
+        searchPresenter.onGetDataSuccesful(list);
+    }
+
+    protected String getLocation() {
+        return mCurrentLocation;
+    }
+
+    protected String getCurrentQuerry() {
+        return mCurrentText;
+    }
+
+    protected boolean checkSetRequirments() {
+        return mSetCurrentLocation && mSetCurrentText;
     }
 
 

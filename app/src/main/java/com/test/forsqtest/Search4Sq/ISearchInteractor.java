@@ -7,7 +7,7 @@ public interface ISearchInteractor {
 
     void updateLocation(String location);
 
-    void updateCurrentText(String text);
+    void updateCurrentQuery(String text);
 
     void getVenues(SearchPresenter searchPresenter);
 }
